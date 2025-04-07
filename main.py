@@ -20,3 +20,5 @@ def read_order_items():
 @app.get("/customers")
 def read_customers():
     return customers.write_json()
+
+# to start API run "fastapi run main.py" in terminal

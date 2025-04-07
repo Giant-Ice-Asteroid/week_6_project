@@ -1,4 +1,5 @@
 import mysql.connector
+import json
 
 def create_bikecorp_db():
     """
@@ -10,12 +11,16 @@ def create_bikecorp_db():
     print("Attempting to set up BikeCorpDB")
 
     # first attempt to connect to the mySQL server itself:
-    try:
+    try:        
+        with open("cred_info.json") as f:
+            content = f.read()
+            json_content = json.loads(content)
+        #connect to the MySQL server (note: without specifying a database)
         conn = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="Velkommen25"
-        )
+            host = json_content["host"],
+            user = json_content["user"],
+            password = json_content["password"]
+            )
 
         #creates cursor to execute sql commands
         cursor = conn.cursor()

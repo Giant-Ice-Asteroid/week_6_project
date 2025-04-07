@@ -1,21 +1,28 @@
 import mysql.connector
 import pandas as pd
-from config import host, user, password
+import json
+
+
+
 def setup_source_database():
     """
     This function sets up the source database (ProductDB) by creating it
-    and its tables, then loading data from the CSV files.
+    and its tables, then loading data from the CSV files..
     """
 
-    print("STEP 1: Setting up source database (ProductDB)...")
+    print("Setting up source database (ProductDB)...")
     
-    try:
-        # Connect to the MySQL server (without specifying a database)
+    try:        
+        with open("cred_info.json") as f:
+            content = f.read()
+            json_content = json.loads(content)
+        #connect to the MySQL server (note: without specifying a database)
         conn = mysql.connector.connect(
-            host=host,
-            user=user,  
-            password=password
-        )
+            host = json_content["host"],
+            user = json_content["user"],
+            password = json_content["password"]
+            )
+            
         
         # Create a cursor to execute SQL commands
         cursor = conn.cursor()
@@ -23,16 +30,7 @@ def setup_source_database():
         # Create the ProductDB database (like in etl_db_setup.py)
         print("Creating ProductDB database...")
         cursor.execute("DROP DATABASE IF EXISTS ProductDB")
-        cursor.execute("CREATE DATABASE ProductDB")
-        
-        # Create user and grant privileges (from etl_db_setup.py)
-        try:
-            cursor.execute("CREATE USER 'curseist'@'localhost' IDENTIFIED BY 'curseword'")
-            cursor.execute("GRANT ALL PRIVILEGES ON *.* TO 'curseist'@'%'")
-            print("User 'curseist' created with privileges.")
-        except mysql.connector.Error as e:
-            # User might already exist, which is fine
-            print(f"Note: {e}")
+        cursor.execute("CREATE DATABASE ProductDB")        
         
         # Switch to using the ProductDB database
         cursor.execute("USE ProductDB")
@@ -86,11 +84,11 @@ def setup_source_database():
         )
         """)
         
-        # Commit these table creations
+        # commit these table creations
         conn.commit()
         print("Tables created successfully in ProductDB.")
         
-        # Now load data from CSV files
+        # Nnext load data from CSV files
         print("\nLoading data from CSV files into ProductDB...")
         
         # Load brands data
@@ -117,7 +115,7 @@ def setup_source_database():
         except Exception as e:
             print(f"Error loading categories data: {e}")
         
-        # Load products data
+        # load products data
         try:
             products_df = pd.read_csv('data\\products.csv')
             for _, row in products_df.iterrows():
@@ -129,7 +127,7 @@ def setup_source_database():
         except Exception as e:
             print(f"Error loading products data: {e}")
         
-        # Load stocks data
+        # load stocks data
         try:
             stocks_df = pd.read_csv('data\\stocks.csv')
             for _, row in stocks_df.iterrows():
@@ -141,11 +139,11 @@ def setup_source_database():
         except Exception as e:
             print(f"Error loading stocks data: {e}")
         
-        # Commit all the data insertions
+        # commit all the data insertions
         conn.commit()
-        print("All data loaded successfully into ProductDB.")
+        print("All data loaded successfully into ProductDB")
         
-        # Close the connection and cursor
+        # close the connection and cursor
         cursor.close()
         conn.close()
         
@@ -158,10 +156,10 @@ def setup_source_database():
             conn.close()
         return False
 
-# This allows the script to be run directly
+#  allows the script to be run directly
 if __name__ == "__main__":
     success = setup_source_database()
     if success:
-        print("\nSTEP 1 COMPLETE: Source database (ProductDB) is set up and ready.")
+        print("\nSuccess: Source database (ProductDB) is set up and ready.")
     else:
-        print("\nSTEP 1 FAILED: Could not set up source database.")
+        print("\nFailure: Could not set up source database.")
