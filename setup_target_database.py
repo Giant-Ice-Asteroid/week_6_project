@@ -62,7 +62,7 @@ def create_bikecorp_db():
         """)
 
         # STORES table (based on flat CSV files)
-        # Using AUTO_Increment to create a unique store_id
+        # we create a new column (new as not in the source csv file) called store_id and use AUTO_Increment to create a unique store_id
 
         print("Creating Stores table..")
         cursor.execute("""
@@ -94,6 +94,7 @@ def create_bikecorp_db():
         """)
 
         # STAFFS table (CSV flat file origin)
+        # first we create a new column, staff_id (not in the origin csv data)
         # Has a "self-referencing" foreign key (manager_id to staff_id)
         # -> this allows a row in the table to be related to another row in the same table
         # Also references the stores table with a foreign key
