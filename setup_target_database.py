@@ -72,6 +72,8 @@ def create_bikecorp_db():
             phone VARCHAR(255),
             email VARCHAR(255),
             street VARCHAR(255),
+            city VARCHAR (255),
+            state VARCHAR (255),
             zip_code int
         ) COMMENT 'Stores information about store locations sourced from flat CSV file'
         """)

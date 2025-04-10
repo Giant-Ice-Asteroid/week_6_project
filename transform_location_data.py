@@ -14,7 +14,6 @@ def transform_location_data():
     - saves the transformed data in the transformed_data dir
     """
 
-### 
     print("Initiating transformation of location data (stores and staffs)...")
     
     # as before, creates a directory to store the transformed data if it doesn't exist already
@@ -60,7 +59,7 @@ def transform_location_data():
     
     ############### STAFFS #####################
 
-    print("\nInitiating transformation of staffs data...")
+    print("\nPart 2 of 2: Transforming staffs data...")
     
     # load staffs data
     try:
@@ -125,7 +124,9 @@ def transform_location_data():
     for col in transformed_staffs_df.columns:
         if transformed_staffs_df[col].dtype == "object":  # string columns
             transformed_staffs_df[col] = transformed_staffs_df[col].fillna('').astype(str)
- 
+    
+    # finally, dropping the street column which is redundant
+    transformed_staffs_df = transformed_staffs_df.drop(columns=["street"])
 
     # then save the transformed staffs data to its dir
     transformed_staffs_df.to_csv("transformed_data/staffs.csv", index=False)

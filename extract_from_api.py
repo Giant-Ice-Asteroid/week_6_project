@@ -65,6 +65,12 @@ def extract_from_api():
 
     return True
 
-extract_from_api()
+if __name__ == "__main__":
+    success = extract_from_api()
+    if success:
+        print("\nSuccess: Data from API server has been extracted")
+    else:
+        print("\nFailure: Could not extract data from API :<")
+
     
 
