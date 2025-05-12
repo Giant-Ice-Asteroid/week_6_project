@@ -22,3 +22,4 @@ def read_customers():
     return customers.write_json()
 
 # to start API run "fastapi run main.py" in terminal
+# can then access API at localhost:8000/docs
